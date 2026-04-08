@@ -167,7 +167,7 @@
                 <div>
                     <p id="current-station" style="margin:0; font-size: 12px; color: #00f2ff;">VOCÊ ESTÁ OUVINDO:</p>
                     <h2 id="station-title" style="margin:5px 0 0 0;">Selecione uma rádio</h2>
-                    <p id="song-title" style="margin:5px 0 0 0; font-size: 14px; color: #bbb;">Aguardando rádio...</p>
+                    <p id="song-title" style="margin:5px 0 0 0; font-size: 14px; color: #bbb;">Música atual...</p>
                 </div>
             </div>
             <div class="controles">
@@ -203,26 +203,27 @@
         const stationTitle = document.getElementById('station-title');
         const songTitle = document.getElementById('song-title');
         const currentCover = document.getElementById('current-cover');
-        let metaInterval = null; // Guardar o intervalo para poder limpar depois
+        let metaInterval = null;
 
         function updateMetadata() {
-            // Consulta o status do Centova Cast
-            fetch('https://cast5.asurahosting.com/rpc/paulo/status-json.php')
+            // Usamos um proxy (cors-anywhere) para o navegador permitir a leitura do JSON do Centova
+            const proxy = "https://api.allorigins.win/get?url=";
+            const url = encodeURIComponent("https://cast5.asurahosting.com/rpc/paulo/status-json.php");
+
+            fetch(proxy + url)
                 .then(response => response.json())
                 .then(data => {
-                    if (data.track && data.track.title) {
-                        // Atualiza o texto com "Artista - Título"
-                        songTitle.innerText = data.track.artist + " - " + data.track.title;
+                    const info = JSON.parse(data.contents);
+                    if (info.track && info.track.title) {
+                        songTitle.innerText = info.track.artist + " - " + info.track.title;
                     }
                 })
                 .catch(err => {
                     console.log('Erro ao buscar metadados:', err);
-                    songTitle.innerText = "Sintonizando...";
                 });
         }
 
         function playRadio(nome, url, imagem) {
-            // Limpa o contador anterior se existir
             if(metaInterval) clearInterval(metaInterval);
 
             stationTitle.innerText = nome;
@@ -231,9 +232,8 @@
             audio.play();
             playBtn.innerText = '⏸';
             
-            // Chama uma vez na hora e depois agenda
             updateMetadata();
-            metaInterval = setInterval(updateMetadata, 15000); 
+            metaInterval = setInterval(updateMetadata, 10000); // Atualiza a cada 10 segundos
         }
 
         playBtn.addEventListener('click', () => {
