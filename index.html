@@ -6,7 +6,7 @@
     <title>VibePlay Nacional | Sua Rádio</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
-        /* CSS - MANTIDO ORIGINAL */
+        /* CSS MANTIDO E OTIMIZADO */
         body {
             margin: 0;
             padding: 0;
@@ -161,10 +161,14 @@
             <div class="info-musica">
                 <div class="capa-album" id="current-cover"></div>
                 <div>
-                    <p id="current-station" style="margin:0; font-size: 12px; color: #00f2ff;">VOCÊ ESTÁ OUVINDO:</p>
-                    <h2 id="station-title" style="margin:5px 0 0 0;">Selecione uma rádio</h2>
-                    <p id="song-title" style="margin:5px 0 0 0; font-size: 14px; color: #bbb; font-weight: 300;">
-                        <span class="cc_streaminfo" data-type="song" data-username="paulo">Carregando informações...</span>
+                    <p id="current-station-name" style="margin:0; font-size: 12px; color: #00f2ff;">SELECIONE UMA RÁDIO</p>
+                    
+                    <h2 style="margin:5px 0 0 0;">
+                        <span class="cc_streaminfo" data-type="title" data-username="paulo">Aguardando...</span>
+                    </h2>
+
+                    <p style="margin:5px 0 0 0; font-size: 14px; color: #bbb; font-weight: 300;">
+                        <span class="cc_streaminfo" data-type="artist" data-username="paulo">Sintonizando informações...</span>
                     </p>
                 </div>
             </div>
@@ -192,14 +196,15 @@
     <audio id="main-audio" src=""></audio>
 
     <script>
-        /* JAVASCRIPT - MANTIDO ORIGINAL PARA FUNCIONAMENTO DO PLAYER */
         const audio = document.getElementById('main-audio');
         const playBtn = document.getElementById('play-btn');
-        const stationTitle = document.getElementById('station-title');
+        const stationDisplayName = document.getElementById('current-station-name');
         const currentCover = document.getElementById('current-cover');
 
         function playRadio(nome, url, imagem) {
-            stationTitle.innerText = nome;
+            // Atualiza o nome da rádio no campo superior pequeno
+            stationDisplayName.innerText = nome.toUpperCase();
+            
             currentCover.style.backgroundImage = "url('" + imagem + "')";
             audio.src = url;
             audio.play();
