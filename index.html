@@ -163,7 +163,9 @@
                 <div>
                     <p id="current-station" style="margin:0; font-size: 12px; color: #00f2ff;">VOCÊ ESTÁ OUVINDO:</p>
                     <h2 id="station-title" style="margin:5px 0 0 0;">Selecione uma rádio</h2>
-                    <p id="song-title" style="margin:5px 0 0 0; font-size: 14px; color: #bbb; font-weight: 300;">Aguardando informação...</p>
+                    <p id="song-title" style="margin:5px 0 0 0; font-size: 14px; color: #bbb; font-weight: 300;">
+                        <span class="cc_streaminfo" data-type="song" data-username="paulo">Carregando...</span>
+                    </p>
                 </div>
             </div>
             <div class="controles">
@@ -209,7 +211,6 @@
                     const status = JSON.parse(data.contents);
                     
                     if (status.track && status.track.artist) {
-                        // Limpa o código [CXXX] se ele aparecer no título para o ouvinte
                         let tituloLimpo = status.track.title.replace(/\[[A-Z0-9]+\]/g, '').trim();
                         const nomeCompleto = status.track.artist + " - " + tituloLimpo;
                         songTitle.innerText = nomeCompleto;
@@ -249,5 +250,8 @@
             }
         });
     </script>
+
+    <script language="javascript" type="text/javascript" src="https://cast5.asurahosting.com:2199/system/streaminfo.js"></script>
+
 </body>
 </html>
