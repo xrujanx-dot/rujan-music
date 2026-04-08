@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VibePlay Nacional | Sua Rádio</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        /* CSS - O VISUAL DO SITE */
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #0f0f0f; /* Fundo bem escuro */
+            color: white;
+            font-family: 'Poppins', sans-serif;
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* Menu Lateral Estilo "The Point" */
+        nav {
+            width: 250px;
+            background-color: #1a1a1a;
+            padding: 40px 20px;
+            display: flex;
+            flex-direction: column;
+            border-right: 1px solid #333;
+        }
+
+        nav h1 {
+            font-size: 22px;
+            color: #00f2ff; /* Azul Neon */
+            margin-bottom: 50px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        nav a {
+            color: #888;
+            text-decoration: none;
+            margin: 15px 0;
+            font-weight: 300;
+            transition: 0.3s;
+        }
+
+        nav a:hover, nav a.active {
+            color: white;
+            padding-left: 10px;
+        }
+
+        /* Conteúdo Principal */
+        main {
+            flex: 1;
+            padding: 40px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* Player do Topo */
+        .player-container {
+            width: 100%;
+            max-width: 800px;
+            background: linear-gradient(145deg, #1e1e1e, #111);
+            padding: 30px;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 50px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            border: 1px solid #333;
+        }
+
+        .info-musica {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .capa-album {
+            width: 80px;
+            height: 80px;
+            background-color: #333;
+            border-radius: 10px;
+            background-image: url('https://via.placeholder.com/80'); /* Placeholder */
+            background-size: cover;
+        }
+
+        .controles button {
+            background: #00f2ff;
+            border: none;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 20px;
+            transition: 0.3s;
+        }
+
+        .controles button:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 20px rgba(0, 242, 255, 0.4);
+        }
+
+        /* Grade de Estações */
+        .grid-estacoes {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 25px;
+            width: 100%;
+            max-width: 1000px;
+        }
+
+        .card-estacao {
+            background-color: #1a1a1a;
+            padding: 15px;
+            border-radius: 15px;
+            text-align: center;
+            cursor: pointer;
+            transition: 0.3s;
+            border: 1px solid transparent;
+        }
+
+        .card-estacao:hover {
+            background-color: #252525;
+            border-color: #00f2ff;
+            transform: translateY(-5px);
+        }
+
+        .card-estacao img {
+            width: 100%;
+            border-radius: 10px;
+            margin-bottom: 15px;
+        }
+
+        .card-estacao p {
+            margin: 0;
+            font-weight: 600;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <h1>VIBEPLAY</h1>
+        <a href="#" class="active">Explorar</a>
+        <a href="#">Favoritos</a>
+        <a href="#">Gêneros</a>
+        <a href="#">Sobre</a>
+        <a href="#">Suporte</a>
+    </nav>
+
+    <main>
+        <div class="player-container">
+            <div class="info-musica">
+                <div class="capa-album" id="current-cover"></div>
+                <div>
+                    <p id="current-station" style="margin:0; font-size: 12px; color: #00f2ff;">VOCÊ ESTÁ OUVINDO:</p>
+                    <h2 id="station-title" style="margin:5px 0 0 0;">Selecione uma rádio</h2>
+                </div>
+            </div>
+            <div class="controles">
+                <button id="play-btn">▶</button>
+            </div>
+        </div>
+
+        <div class="grid-estacoes">
+            
+            <div class="card-estacao" onclick="playRadio('Sertanejo Universitário', 'https://stream.exemplo.com/sertanejo')">
+                <img src="https://via.placeholder.com/150" alt="Sertanejo">
+                <p>Sertanejo Universitário</p>
+            </div>
+
+            <div class="card-estacao" onclick="playRadio('Pagode Atual', 'https://stream.exemplo.com/pagode')">
+                <img src="https://via.placeholder.com/150" alt="Pagode">
+                <p>Pagode Atual</p>
+            </div>
+
+            <div class="card-estacao" onclick="playRadio('Samba Raiz', 'https://stream.exemplo.com/samba')">
+                <img src="https://via.placeholder.com/150" alt="Samba">
+                <p>Samba Raiz</p>
+            </div>
+
+            </div>
+    </main>
+
+    <audio id="main-audio" src=""></audio>
+
+    <script>
+        // JAVASCRIPT - A LÓGICA
+        const audio = document.getElementById('main-audio');
+        const playBtn = document.getElementById('play-btn');
+        const stationTitle = document.getElementById('station-title');
+
+        function playRadio(nome, url) {
+            stationTitle.innerText = nome;
+            audio.src = url;
+            audio.play();
+            playBtn.innerText = '⏸';
+        }
+
+        playBtn.addEventListener('click', () => {
+            if (audio.paused) {
+                audio.play();
+                playBtn.innerText = '⏸';
+            } else {
+                audio.pause();
+                playBtn.innerText = '▶';
+            }
+        });
+    </script>
+</body>
+</html>
