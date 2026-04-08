@@ -85,7 +85,7 @@
             height: 80px;
             background-color: #333;
             border-radius: 10px;
-            background-image: url('https://via.placeholder.com/80'); /* Placeholder */
+            background-image: url('https://via.placeholder.com/80'); 
             background-size: cover;
             background-position: center;
         }
@@ -99,7 +99,6 @@
             cursor: pointer;
             font-size: 20px;
             transition: 0.3s;
-            /* Ajuste para centralizar o ícone do play/pause perfeitamente */
             display: flex;
             align-items: center;
             justify-content: center;
@@ -177,7 +176,7 @@
 
         <div class="grid-estacoes">
             
-            <div class="card-estacao" onclick="playRadio('Gospel Atuais', 'https://stream.exemplo.com/gospel', 'img/gospel.png')">
+            <div class="card-estacao" onclick="playRadio('Gospel Atuais', 'https://cast5.asurahosting.com/proxy/paulo/stream', 'img/gospel.png')">
                 <img src="img/gospel.png" alt="Gospel">
                 <p>Gospel Atuais</p>
             </div>
@@ -198,7 +197,6 @@
     <audio id="main-audio" src=""></audio>
 
     <script>
-        // JAVASCRIPT - A LÓGICA
         const audio = document.getElementById('main-audio');
         const playBtn = document.getElementById('play-btn');
         const stationTitle = document.getElementById('station-title');
