@@ -3,215 +3,152 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VibePlay Nacional | Sua Rádio</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <title>RUJAN MUSIC | Rede Nacional</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
     <style>
-        /* CSS - O VISUAL DO SITE */
         body {
             margin: 0;
-            padding: 0;
-            background-color: #0f0f0f; /* Fundo bem escuro */
+            background-color: #0b0b0b;
             color: white;
-            font-family: 'Poppins', sans-serif;
-            display: flex;
-            height: 100vh;
-            overflow: hidden;
+            font-family: 'Montserrat', sans-serif;
         }
 
-        /* Menu Lateral Estilo "The Point" */
-        nav {
-            width: 250px;
-            background-color: #1a1a1a;
-            padding: 40px 20px;
-            display: flex;
-            flex-direction: column;
-            border-right: 1px solid #333;
-        }
-
-        nav h1 {
-            font-size: 22px;
-            color: #00f2ff; /* Azul Neon */
-            margin-bottom: 50px;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-        }
-
-        nav a {
-            color: #888;
-            text-decoration: none;
-            margin: 15px 0;
-            font-weight: 300;
-            transition: 0.3s;
-        }
-
-        nav a:hover, nav a.active {
-            color: white;
-            padding-left: 10px;
-        }
-
-        /* Conteúdo Principal */
-        main {
-            flex: 1;
-            padding: 40px;
-            overflow-y: auto;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-
-        /* Player do Topo */
-        .player-container {
+        /* PLAYER DO TOPO */
+        .top-player {
+            position: sticky;
+            top: 0;
             width: 100%;
-            max-width: 800px;
-            background: linear-gradient(145deg, #1e1e1e, #111);
-            padding: 30px;
-            border-radius: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 50px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-            border: 1px solid #333;
+            background: linear-gradient(to bottom, #1a1a1a, #0b0b0b);
+            padding: 20px 0;
+            border-bottom: 1px solid #333;
+            z-index: 1000;
+            text-align: center;
         }
 
-        .info-musica {
+        .now-playing {
             display: flex;
             align-items: center;
+            justify-content: center;
             gap: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
         }
 
-        .capa-album {
-            width: 80px;
-            height: 80px;
-            background-color: #333;
+        .cover-art {
+            width: 100px;
+            height: 100px;
             border-radius: 10px;
-            background-image: url('https://via.placeholder.com/80'); /* Placeholder */
-            background-size: cover;
+            background: #222;
+            box-shadow: 0 0 20px rgba(0,242,255,0.2);
         }
 
-        .controles button {
+        .status-info { text-align: left; }
+        .status-info h2 { margin: 0; font-size: 24px; color: #00f2ff; }
+        .status-info p { margin: 5px 0 0; color: #888; text-transform: uppercase; font-size: 12px; }
+
+        .btn-play {
             background: #00f2ff;
             border: none;
             width: 60px;
             height: 60px;
             border-radius: 50%;
+            font-size: 24px;
             cursor: pointer;
-            font-size: 20px;
             transition: 0.3s;
         }
 
-        .controles button:hover {
-            transform: scale(1.1);
-            box-shadow: 0 0 20px rgba(0, 242, 255, 0.4);
+        /* GRADE DE ESTAÇÕES */
+        .container {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 20px;
         }
 
-        /* Grade de Estações */
-        .grid-estacoes {
+        .grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
             gap: 25px;
-            width: 100%;
-            max-width: 1000px;
         }
 
-        .card-estacao {
-            background-color: #1a1a1a;
-            padding: 15px;
+        .card {
+            background: #161616;
             border-radius: 15px;
-            text-align: center;
-            cursor: pointer;
+            overflow: hidden;
             transition: 0.3s;
-            border: 1px solid transparent;
+            cursor: pointer;
+            border: 1px solid #222;
         }
 
-        .card-estacao:hover {
-            background-color: #252525;
+        .card:hover {
+            transform: translateY(-10px);
             border-color: #00f2ff;
-            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
         }
 
-        .card-estacao img {
-            width: 100%;
-            border-radius: 10px;
-            margin-bottom: 15px;
-        }
+        .card img { width: 100%; display: block; }
+        .card-info { padding: 15px; text-align: center; }
+        .card-info h3 { margin: 0; font-size: 16px; }
 
-        .card-estacao p {
-            margin: 0;
-            font-weight: 600;
-            font-size: 14px;
-        }
+        footer { text-align: center; padding: 40px; color: #444; font-size: 12px; }
     </style>
 </head>
 <body>
 
-    <nav>
-        <h1>VIBEPLAY</h1>
-        <a href="#" class="active">Explorar</a>
-        <a href="#">Favoritos</a>
-        <a href="#">Gêneros</a>
-        <a href="#">Sobre</a>
-        <a href="#">Suporte</a>
-    </nav>
-
-    <main>
-        <div class="player-container">
-            <div class="info-musica">
-                <div class="capa-album" id="current-cover"></div>
-                <div>
-                    <p id="current-station" style="margin:0; font-size: 12px; color: #00f2ff;">VOCÊ ESTÁ OUVINDO:</p>
-                    <h2 id="station-title" style="margin:5px 0 0 0;">Selecione uma rádio</h2>
-                </div>
+    <div class="top-player">
+        <div class="now-playing">
+            <div id="cover" class="cover-art"></div>
+            <div class="status-info">
+                <p>Você está ouvindo:</p>
+                <h2 id="current-station">Selecione uma Estação</h2>
             </div>
-            <div class="controles">
-                <button id="play-btn">▶</button>
+            <button class="btn-play" id="playPause">▶</button>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="grid">
+            <div class="card" onclick="changeRadio('Sertanejo Universitário', 'https://stream.exemplo.com/sertanejo')">
+                <img src="https://via.placeholder.com/300?text=Sertanejo" alt="Sertanejo">
+                <div class="card-info"><h3>Sertanejo Universitário</h3></div>
+            </div>
+
+            <div class="card" onclick="changeRadio('Pagode Atual', 'https://stream.exemplo.com/pagode')">
+                <img src="https://via.placeholder.com/300?text=Pagode" alt="Pagode">
+                <div class="card-info"><h3>Pagode Atual</h3></div>
+            </div>
+
+            <div class="card" onclick="changeRadio('Piseiro Nacional', 'https://stream.exemplo.com/piseiro')">
+                <img src="https://via.placeholder.com/300?text=Piseiro" alt="Piseiro">
+                <div class="card-info"><h3>Piseiro Nacional</h3></div>
             </div>
         </div>
+    </div>
 
-        <div class="grid-estacoes">
-            
-            <div class="card-estacao" onclick="playRadio('Sertanejo Universitário', 'https://stream.exemplo.com/sertanejo')">
-                <img src="https://via.placeholder.com/150" alt="Sertanejo">
-                <p>Sertanejo Universitário</p>
-            </div>
+    <footer>RUJAN MUSIC - 2026 | A sua Vibe Nacional</footer>
 
-            <div class="card-estacao" onclick="playRadio('Pagode Atual', 'https://stream.exemplo.com/pagode')">
-                <img src="https://via.placeholder.com/150" alt="Pagode">
-                <p>Pagode Atual</p>
-            </div>
-
-            <div class="card-estacao" onclick="playRadio('Samba Raiz', 'https://stream.exemplo.com/samba')">
-                <img src="https://via.placeholder.com/150" alt="Samba">
-                <p>Samba Raiz</p>
-            </div>
-
-            </div>
-    </main>
-
-    <audio id="main-audio" src=""></audio>
+    <audio id="player"></audio>
 
     <script>
-        // JAVASCRIPT - A LÓGICA
-        const audio = document.getElementById('main-audio');
-        const playBtn = document.getElementById('play-btn');
-        const stationTitle = document.getElementById('station-title');
+        const audio = document.getElementById('player');
+        const playBtn = document.getElementById('playPause');
+        const title = document.getElementById('current-station');
 
-        function playRadio(nome, url) {
-            stationTitle.innerText = nome;
+        function changeRadio(name, url) {
+            title.innerText = name;
             audio.src = url;
             audio.play();
-            playBtn.innerText = '⏸';
+            playBtn.innerText = "⏸";
         }
 
-        playBtn.addEventListener('click', () => {
+        playBtn.onclick = () => {
             if (audio.paused) {
                 audio.play();
-                playBtn.innerText = '⏸';
+                playBtn.innerText = "⏸";
             } else {
                 audio.pause();
-                playBtn.innerText = '▶';
+                playBtn.innerText = "▶";
             }
-        });
+        };
     </script>
 </body>
 </html>
