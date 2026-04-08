@@ -87,6 +87,7 @@
             border-radius: 10px;
             background-image: url('https://via.placeholder.com/80'); /* Placeholder */
             background-size: cover;
+            background-position: center;
         }
 
         .controles button {
@@ -98,6 +99,12 @@
             cursor: pointer;
             font-size: 20px;
             transition: 0.3s;
+            /* Ajuste para centralizar o ícone do play/pause perfeitamente */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0;
+            line-height: 0;
         }
 
         .controles button:hover {
@@ -170,17 +177,17 @@
 
         <div class="grid-estacoes">
             
-            <div class="card-estacao" onclick="playRadio('Gospel Atuais', 'https://stream.exemplo.com/gospel')">
+            <div class="card-estacao" onclick="playRadio('Gospel Atuais', 'https://stream.exemplo.com/gospel', 'img/gospel.png')">
                 <img src="img/gospel.png" alt="Gospel">
                 <p>Gospel Atuais</p>
             </div>
 
-            <div class="card-estacao" onclick="playRadio('Pagode Atual', 'https://stream.exemplo.com/pagode')">
+            <div class="card-estacao" onclick="playRadio('Pagode Atual', 'https://stream.exemplo.com/pagode', 'https://via.placeholder.com/150')">
                 <img src="https://via.placeholder.com/150" alt="Pagode">
                 <p>Pagode Atual</p>
             </div>
 
-            <div class="card-estacao" onclick="playRadio('Samba Raiz', 'https://stream.exemplo.com/samba')">
+            <div class="card-estacao" onclick="playRadio('Samba Raiz', 'https://stream.exemplo.com/samba', 'https://via.placeholder.com/150')">
                 <img src="https://via.placeholder.com/150" alt="Samba">
                 <p>Samba Raiz</p>
             </div>
@@ -195,15 +202,19 @@
         const audio = document.getElementById('main-audio');
         const playBtn = document.getElementById('play-btn');
         const stationTitle = document.getElementById('station-title');
+        const currentCover = document.getElementById('current-cover');
 
-        function playRadio(nome, url) {
+        function playRadio(nome, url, imagem) {
             stationTitle.innerText = nome;
+            currentCover.style.backgroundImage = "url('" + imagem + "')";
             audio.src = url;
             audio.play();
             playBtn.innerText = '⏸';
         }
 
         playBtn.addEventListener('click', () => {
+            if (audio.src === "" || audio.src.includes("null")) return;
+
             if (audio.paused) {
                 audio.play();
                 playBtn.innerText = '⏸';
