@@ -6,7 +6,7 @@
     <title>VibePlay Nacional | Sua Rádio</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
-        /* CSS - MANTIDO ORIGINAL COM AJUSTES SOLICITADOS */
+        /* CSS - MANTIDO ORIGINAL */
         body {
             margin: 0;
             padding: 0;
@@ -59,9 +59,9 @@
 
         .player-container {
             width: 100%;
-            max-width: 600px; /* LARGURA REDUZIDA CONFORME PEDIDO */
+            max-width: 800px;
             background: linear-gradient(145deg, #1e1e1e, #111);
-            padding: 20px 30px;
+            padding: 30px;
             border-radius: 20px;
             display: flex;
             align-items: center;
@@ -78,8 +78,8 @@
         }
 
         .capa-album {
-            width: 70px;
-            height: 70px;
+            width: 80px;
+            height: 80px;
             background-color: #333;
             border-radius: 10px;
             background-image: url('https://via.placeholder.com/80'); 
@@ -87,41 +87,38 @@
             background-position: center;
         }
 
-        /* BOTÃO PLAY/PAUSE MAIS MINIMALISTA */
         .controles button {
-            background: transparent;
-            border: 2px solid #00f2ff;
-            color: #00f2ff;
-            width: 50px;
-            height: 50px;
+            background: #00f2ff;
+            border: none;
+            width: 60px;
+            height: 60px;
             border-radius: 50%;
             cursor: pointer;
-            font-size: 18px;
+            font-size: 20px;
             transition: 0.3s;
             display: flex;
             align-items: center;
             justify-content: center;
             padding: 0;
+            line-height: 0;
         }
 
         .controles button:hover {
-            background: #00f2ff;
-            color: #000;
-            transform: scale(1.05);
+            transform: scale(1.1);
+            box-shadow: 0 0 20px rgba(0, 242, 255, 0.4);
         }
 
-        /* GRADE DE ESTAÇÕES - 5 POR FILEIRA */
         .grid-estacoes {
             display: grid;
-            grid-template-columns: repeat(5, 1fr); 
-            gap: 20px;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 25px;
             width: 100%;
-            max-width: 1100px;
+            max-width: 1000px;
         }
 
         .card-estacao {
             background-color: #1a1a1a;
-            padding: 12px;
+            padding: 15px;
             border-radius: 15px;
             text-align: center;
             cursor: pointer;
@@ -138,13 +135,13 @@
         .card-estacao img {
             width: 100%;
             border-radius: 10px;
-            margin-bottom: 10px;
+            margin-bottom: 15px;
         }
 
         .card-estacao p {
             margin: 0;
             font-weight: 600;
-            font-size: 13px;
+            font-size: 14px;
         }
     </style>
 </head>
@@ -152,7 +149,7 @@
 
     <nav>
         <h1>VIBEPLAY</h1>
-        <a href="#" class="active">Rádios</a>
+        <a href="#" class="active">Explorar</a>
         <a href="#">Favoritos</a>
         <a href="#">Gêneros</a>
         <a href="#">Sobre</a>
@@ -164,14 +161,11 @@
             <div class="info-musica">
                 <div class="capa-album" id="current-cover"></div>
                 <div>
-                    <p id="current-station" style="margin:0; font-size: 11px; color: #00f2ff; opacity: 0.8;">VOCÊ ESTÁ OUVINDO:</p>
-                    <h2 id="song-title-display" style="margin:2px 0; font-size: 18px; font-weight: 600;">
-                        <span class="cc_streaminfo" data-type="title" data-username="paulo">Carregando música...</span>
-                    </h2>
-                    <p id="artist-name-display" style="margin:0; font-size: 14px; color: #bbb; font-weight: 300;">
-                        <span class="cc_streaminfo" data-type="artist" data-username="paulo">Carregando artista...</span>
+                    <p id="current-station" style="margin:0; font-size: 12px; color: #00f2ff;">VOCÊ ESTÁ OUVINDO:</p>
+                    <h2 id="station-title" style="margin:5px 0 0 0;">Selecione uma rádio</h2>
+                    <p id="song-title" style="margin:5px 0 0 0; font-size: 14px; color: #bbb; font-weight: 300;">
+                        <span class="cc_streaminfo" data-type="song" data-username="paulo">Carregando informações...</span>
                     </p>
-                    <h2 id="station-title" style="display:none;">Selecione uma rádio</h2>
                 </div>
             </div>
             <div class="controles">
@@ -192,21 +186,13 @@
                 <img src="https://via.placeholder.com/150" alt="Samba">
                 <p>Samba Raiz</p>
             </div>
-            <div class="card-estacao">
-                <img src="https://via.placeholder.com/150" alt="Radio">
-                <p>Em breve</p>
-            </div>
-            <div class="card-estacao">
-                <img src="https://via.placeholder.com/150" alt="Radio">
-                <p>Em breve</p>
-            </div>
         </div>
     </main>
 
     <audio id="main-audio" src=""></audio>
 
     <script>
-        /* JAVASCRIPT - MANTIDO ORIGINAL COM ADIÇÃO DE AUTOPLAY */
+        /* JAVASCRIPT - MANTIDO ORIGINAL PARA FUNCIONAMENTO DO PLAYER */
         const audio = document.getElementById('main-audio');
         const playBtn = document.getElementById('play-btn');
         const stationTitle = document.getElementById('station-title');
@@ -216,16 +202,9 @@
             stationTitle.innerText = nome;
             currentCover.style.backgroundImage = "url('" + imagem + "')";
             audio.src = url;
-            audio.play().catch(error => {
-                console.log("Autoplay bloqueado pelo navegador. Clique no Play.");
-            });
+            audio.play();
             playBtn.innerText = '⏸';
         }
-
-        // FUNÇÃO PARA INICIAR A RÁDIO GOSPEL AUTOMATICAMENTE AO CARREGAR
-        window.addEventListener('load', () => {
-            playRadio('Gospel Atuais', 'https://cast5.asurahosting.com/proxy/paulo/stream', 'img/gospel.png');
-        });
 
         playBtn.addEventListener('click', () => {
             if (audio.src === "" || audio.src.includes("null")) return;
