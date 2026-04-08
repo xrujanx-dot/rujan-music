@@ -6,7 +6,6 @@
     <title>VibePlay Nacional | Sua Rádio</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
-        /* CSS - MANTIDO ORIGINAL COM AJUSTES SOLICITADOS */
         body {
             margin: 0;
             padding: 0;
@@ -59,7 +58,7 @@
 
         .player-container {
             width: 100%;
-            max-width: 600px; /* LARGURA REDUZIDA CONFORME PEDIDO */
+            max-width: 600px;
             background: linear-gradient(145deg, #1e1e1e, #111);
             padding: 20px 30px;
             border-radius: 20px;
@@ -82,12 +81,10 @@
             height: 70px;
             background-color: #333;
             border-radius: 10px;
-            background-image: url('https://via.placeholder.com/80'); 
             background-size: cover;
             background-position: center;
         }
 
-        /* BOTÃO PLAY/PAUSE MAIS MINIMALISTA */
         .controles button {
             background: transparent;
             border: 2px solid #00f2ff;
@@ -110,7 +107,6 @@
             transform: scale(1.05);
         }
 
-        /* GRADE DE ESTAÇÕES - 5 POR FILEIRA */
         .grid-estacoes {
             display: grid;
             grid-template-columns: repeat(5, 1fr); 
@@ -166,12 +162,12 @@
                 <div>
                     <p id="current-station" style="margin:0; font-size: 11px; color: #00f2ff; opacity: 0.8;">VOCÊ ESTÁ OUVINDO:</p>
                     <h2 id="song-title-display" style="margin:2px 0; font-size: 18px; font-weight: 600;">
-                        <span class="cc_streaminfo" data-type="title" data-username="paulo">Música...</span>
+                        <span class="cc_streaminfo" data-type="title" data-username="paulo">Carregando música...</span>
                     </h2>
                     <p id="artist-name-display" style="margin:0; font-size: 14px; color: #bbb; font-weight: 300;">
-                        <span class="cc_streaminfo" data-type="artist" data-username="paulo">Artista</span>
+                        <span class="cc_streaminfo" data-type="artist" data-username="paulo">Carregando artista...</span>
                     </p>
-                    <h2 id="station-title" style="display:none;">Selecione uma rádio</h2>
+                    <h2 id="station-title" style="display:none;"></h2>
                 </div>
             </div>
             <div class="controles">
@@ -206,19 +202,23 @@
     <audio id="main-audio" src=""></audio>
 
     <script>
-        /* JAVASCRIPT - MANTIDO ORIGINAL */
         const audio = document.getElementById('main-audio');
         const playBtn = document.getElementById('play-btn');
-        const stationTitle = document.getElementById('station-title');
         const currentCover = document.getElementById('current-cover');
 
         function playRadio(nome, url, imagem) {
-            stationTitle.innerText = nome;
             currentCover.style.backgroundImage = "url('" + imagem + "')";
             audio.src = url;
-            audio.play();
+            audio.play().catch(error => {
+                console.log("O navegador bloqueou o autoplay. O usuário precisa interagir primeiro.");
+            });
             playBtn.innerText = '⏸';
         }
+
+        // TOCA AUTOMATICAMENTE A RÁDIO GOSPEL AO CARREGAR A PÁGINA
+        window.addEventListener('load', () => {
+            playRadio('Gospel Atuais', 'https://cast5.asurahosting.com/proxy/paulo/stream', 'img/gospel.png');
+        });
 
         playBtn.addEventListener('click', () => {
             if (audio.src === "" || audio.src.includes("null")) return;
@@ -233,6 +233,5 @@
     </script>
 
     <script language="javascript" type="text/javascript" src="https://cast5.asurahosting.com:2199/system/streaminfo.js"></script>
-
 </body>
 </html>
