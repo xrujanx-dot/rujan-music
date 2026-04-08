@@ -198,10 +198,8 @@
         let metaInterval = null;
 
         function updateMetadata() {
-            // Nova estratégia: lendo o arquivo de status simplificado do Centova
             const url = "https://cast5.asurahosting.com/rpc/paulo/status-json.php";
             
-            // Usamos o AllOrigins para burlar o bloqueio de segurança (CORS) e adicionamos timestamp para evitar cache
             fetch(`https://api.allorigins.win/get?url=${encodeURIComponent(url)}&t=${new Date().getTime()}`)
                 .then(response => {
                     if (response.ok) return response.json();
@@ -211,8 +209,9 @@
                     const status = JSON.parse(data.contents);
                     
                     if (status.track && status.track.artist) {
-                        // Monta o nome exatamente como aparece no seu painel
-                        const nomeCompleto = status.track.artist + " - " + status.track.title;
+                        // Limpa o código [CXXX] se ele aparecer no título para o ouvinte
+                        let tituloLimpo = status.track.title.replace(/\[[A-Z0-9]+\]/g, '').trim();
+                        const nomeCompleto = status.track.artist + " - " + tituloLimpo;
                         songTitle.innerText = nomeCompleto;
                     } else if (status.servertitle) {
                         songTitle.innerText = status.servertitle;
@@ -235,9 +234,7 @@
             audio.play();
             playBtn.innerText = '⏸';
             
-            // Busca o nome da música imediatamente ao clicar
             updateMetadata();
-            // Atualiza a cada 10 segundos para ser mais ágil
             metaInterval = setInterval(updateMetadata, 10000);
         }
 
