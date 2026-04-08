@@ -167,6 +167,7 @@
                 <div>
                     <p id="current-station" style="margin:0; font-size: 12px; color: #00f2ff;">VOCÊ ESTÁ OUVINDO:</p>
                     <h2 id="station-title" style="margin:5px 0 0 0;">Selecione uma rádio</h2>
+                    <p id="song-title" style="margin:5px 0 0 0; font-size: 14px; color: #bbb;">Aguardando rádio...</p>
                 </div>
             </div>
             <div class="controles">
@@ -200,14 +201,39 @@
         const audio = document.getElementById('main-audio');
         const playBtn = document.getElementById('play-btn');
         const stationTitle = document.getElementById('station-title');
+        const songTitle = document.getElementById('song-title');
         const currentCover = document.getElementById('current-cover');
+        let metaInterval = null; // Guardar o intervalo para poder limpar depois
+
+        function updateMetadata() {
+            // Consulta o status do Centova Cast
+            fetch('https://cast5.asurahosting.com/rpc/paulo/status-json.php')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.track && data.track.title) {
+                        // Atualiza o texto com "Artista - Título"
+                        songTitle.innerText = data.track.artist + " - " + data.track.title;
+                    }
+                })
+                .catch(err => {
+                    console.log('Erro ao buscar metadados:', err);
+                    songTitle.innerText = "Sintonizando...";
+                });
+        }
 
         function playRadio(nome, url, imagem) {
+            // Limpa o contador anterior se existir
+            if(metaInterval) clearInterval(metaInterval);
+
             stationTitle.innerText = nome;
             currentCover.style.backgroundImage = "url('" + imagem + "')";
             audio.src = url;
             audio.play();
             playBtn.innerText = '⏸';
+            
+            // Chama uma vez na hora e depois agenda
+            updateMetadata();
+            metaInterval = setInterval(updateMetadata, 15000); 
         }
 
         playBtn.addEventListener('click', () => {
