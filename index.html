@@ -10,7 +10,7 @@
         body {
             margin: 0;
             padding: 0;
-            background-color: #0f0f0f; /* Fundo bem escuro */
+            background-color: #0f0f0f;
             color: white;
             font-family: 'Poppins', sans-serif;
             display: flex;
@@ -18,7 +18,6 @@
             overflow: hidden;
         }
 
-        /* Menu Lateral Estilo "The Point" */
         nav {
             width: 250px;
             background-color: #1a1a1a;
@@ -30,7 +29,7 @@
 
         nav h1 {
             font-size: 22px;
-            color: #00f2ff; /* Azul Neon */
+            color: #00f2ff;
             margin-bottom: 50px;
             text-transform: uppercase;
             letter-spacing: 2px;
@@ -49,7 +48,6 @@
             padding-left: 10px;
         }
 
-        /* Conteúdo Principal */
         main {
             flex: 1;
             padding: 40px;
@@ -59,7 +57,6 @@
             align-items: center;
         }
 
-        /* Player do Topo */
         .player-container {
             width: 100%;
             max-width: 800px;
@@ -111,7 +108,6 @@
             box-shadow: 0 0 20px rgba(0, 242, 255, 0.4);
         }
 
-        /* Grade de Estações */
         .grid-estacoes {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
@@ -167,7 +163,7 @@
                 <div>
                     <p id="current-station" style="margin:0; font-size: 12px; color: #00f2ff;">VOCÊ ESTÁ OUVINDO:</p>
                     <h2 id="station-title" style="margin:5px 0 0 0;">Selecione uma rádio</h2>
-                    <p id="song-title" style="margin:5px 0 0 0; font-size: 14px; color: #bbb;">Música atual...</p>
+                    <p id="song-title" style="margin:5px 0 0 0; font-size: 14px; color: #bbb; font-weight: 300;">Aguardando informação...</p>
                 </div>
             </div>
             <div class="controles">
@@ -176,23 +172,19 @@
         </div>
 
         <div class="grid-estacoes">
-            
             <div class="card-estacao" onclick="playRadio('Gospel Atuais', 'https://cast5.asurahosting.com/proxy/paulo/stream', 'img/gospel.png')">
                 <img src="img/gospel.png" alt="Gospel">
                 <p>Gospel Atuais</p>
             </div>
-
             <div class="card-estacao" onclick="playRadio('Pagode Atual', 'https://stream.exemplo.com/pagode', 'https://via.placeholder.com/150')">
                 <img src="https://via.placeholder.com/150" alt="Pagode">
                 <p>Pagode Atual</p>
             </div>
-
             <div class="card-estacao" onclick="playRadio('Samba Raiz', 'https://stream.exemplo.com/samba', 'https://via.placeholder.com/150')">
                 <img src="https://via.placeholder.com/150" alt="Samba">
                 <p>Samba Raiz</p>
             </div>
-
-            </div>
+        </div>
     </main>
 
     <audio id="main-audio" src=""></audio>
@@ -206,20 +198,26 @@
         let metaInterval = null;
 
         function updateMetadata() {
-            // Usamos um proxy (cors-anywhere) para o navegador permitir a leitura do JSON do Centova
-            const proxy = "https://api.allorigins.win/get?url=";
-            const url = encodeURIComponent("https://cast5.asurahosting.com/rpc/paulo/status-json.php");
-
-            fetch(proxy + url)
-                .then(response => response.json())
+            // Usamos o AllOrigins para burlar o bloqueio de segurança (CORS)
+            const apiUrl = "https://cast5.asurahosting.com/rpc/paulo/status-json.php";
+            
+            fetch(`https://api.allorigins.win/get?url=${encodeURIComponent(apiUrl)}&t=${new Date().getTime()}`)
+                .then(response => {
+                    if (response.ok) return response.json();
+                    throw new Error('Erro na rede');
+                })
                 .then(data => {
-                    const info = JSON.parse(data.contents);
-                    if (info.track && info.track.title) {
-                        songTitle.innerText = info.track.artist + " - " + info.track.title;
+                    const status = JSON.parse(data.contents);
+                    if (status.track && status.track.artist) {
+                        // Atualiza o texto com "Artista - Música"
+                        songTitle.innerText = status.track.artist + " - " + status.track.title;
+                    } else {
+                        songTitle.innerText = "Transmissão ao vivo";
                     }
                 })
                 .catch(err => {
-                    console.log('Erro ao buscar metadados:', err);
+                    console.error("Erro ao buscar dados:", err);
+                    songTitle.innerText = "Sintonizando informações...";
                 });
         }
 
@@ -232,13 +230,14 @@
             audio.play();
             playBtn.innerText = '⏸';
             
+            // Busca o nome da música imediatamente ao clicar
             updateMetadata();
-            metaInterval = setInterval(updateMetadata, 10000); // Atualiza a cada 10 segundos
+            // E atualiza a cada 15 segundos
+            metaInterval = setInterval(updateMetadata, 15000);
         }
 
         playBtn.addEventListener('click', () => {
             if (audio.src === "" || audio.src.includes("null")) return;
-
             if (audio.paused) {
                 audio.play();
                 playBtn.innerText = '⏸';
