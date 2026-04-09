@@ -47,7 +47,7 @@
                     
                     <p id="artist-name-display" style="margin:5px 0 0 0; font-size: 14px; color: #bbb; font-weight: 300;">Sintonizando...</p>
                     
-                    <span class="cc_streaminfo" data-type="song" data-username="paulo" id="centova-data" style="display:none;"></span>
+                    <span class="cc_streaminfo" data-type="song" data-username="paulo" id="centova-data" style="display:none !important;"></span>
                 </div>
             </div>
             <div class="controles">
@@ -82,17 +82,17 @@
             playBtn.innerText = '⏸';
         }
 
-        // Função para monitorar a mudança no widget do Centova e separar Artista de Música
+        // Observador para separar os dados e atualizar a interface sem duplicar
         const observer = new MutationObserver(() => {
-            const rawData = centovaData.innerText; // Ex: "Fernanda Brum - Cura-me"
+            const rawData = centovaData.innerText; 
             
             if (rawData && rawData.includes(" - ")) {
                 const partes = rawData.split(" - ");
-                artistDisplay.innerText = partes[0]; // Fernanda Brum
-                musicDisplay.innerText = partes[1];  // Cura-me
-            } else {
+                artistDisplay.innerText = partes[0].trim(); 
+                musicDisplay.innerText = partes[1].trim();  
+            } else if (rawData && rawData !== "Loading ..." && rawData !== "Carregando...") {
                 musicDisplay.innerText = rawData;
-                artistDisplay.innerText = "Transmissão ao vivo";
+                artistDisplay.innerText = ""; // Limpa o artista se não houver separação
             }
         });
 
