@@ -83,16 +83,16 @@
         }
 
         const observer = new MutationObserver(() => {
-            const rawData = centovaData.innerText; 
+            const rawData = centovaData.innerText.trim(); 
             
             if (rawData && rawData.includes(" - ")) {
                 const partes = rawData.split(" - ");
-                // Define apenas os campos específicos e evita que o rawData apareça em outro lugar
+                // Limpa as repetições: partes[0] vira Artista, partes[1] vira Música
                 artistDisplay.innerText = partes[0].trim(); 
                 musicDisplay.innerText = partes[1].trim();  
-            } else if (rawData && rawData !== "Loading ..." && rawData !== "Carregando...") {
+            } else if (rawData && rawData !== "Loading ..." && rawData !== "Carregando..." && rawData !== "Sintonizando informações...") {
                 musicDisplay.innerText = rawData;
-                artistDisplay.innerText = ""; 
+                artistDisplay.innerText = "Transmissão ao vivo"; 
             }
         });
 
