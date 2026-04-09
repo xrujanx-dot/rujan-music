@@ -6,21 +6,19 @@
     <title>VibePlay Nacional | Sua Rádio</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
-        /* CONFIGURAÇÕES GERAIS - Mantido */
+        /* CONFIGURAÇÕES GERAIS */
         body { margin: 0; padding: 0; background-color: #0f0f0f; color: white; font-family: 'Poppins', sans-serif; display: flex; height: 100vh; overflow: hidden; }
         
-        /* MENU LATERAL - Mantido */
         nav { width: 250px; background-color: #1a1a1a; padding: 40px 20px; display: flex; flex-direction: column; border-right: 1px solid #333; }
         nav h1 { font-size: 22px; color: #00f2ff; margin-bottom: 50px; text-transform: uppercase; letter-spacing: 2px; }
         nav a { color: #888; text-decoration: none; margin: 15px 0; font-weight: 300; transition: 0.3s; }
         nav a:hover, nav a.active { color: white; padding-left: 10px; }
         
-        /* ÁREA PRINCIPAL - Mantido */
         main { flex: 1; padding: 38px; overflow-y: auto; display: flex; flex-direction: column; align-items: flex-start; }
         
-        /* PLAYER: POSICIONAMENTO E ESTILO ATUALIZADOS */
+        /* PLAYER CONTAINER */
         .player-container { 
-            width: calc(20% - 20px); /* Alinhamento com bloco de baixo */
+            width: calc(20% - 20px); 
             min-width: 200px; 
             background: linear-gradient(145deg, #1e1e1e, #111); 
             padding: 15px; 
@@ -36,63 +34,52 @@
 
         .info-musica { display: flex; align-items: center; gap: 12px; overflow: hidden; flex: 1; }
         
-        /* Caixa para segurar a capa e o símbolo por cima */
-        .capa-wrapper { 
-            position: relative; /* Para o símbolo absoluto */
-            width: 50px; 
-            height: 50px; 
-            flex-shrink: 0; 
-        }
-
-        .capa-album { 
-            width: 100%; 
-            height: 100%; 
-            border-radius: 6px; 
-            background-color: #333; 
-            background-image: url('https://via.placeholder.com/50'); 
-            background-size: cover; 
-            background-position: center; 
-        }
+        .capa-wrapper { position: relative; width: 50px; height: 50px; flex-shrink: 0; }
+        .capa-album { width: 100%; height: 100%; border-radius: 6px; background-color: #333; background-size: cover; background-position: center; }
         
-        /* --- CORREÇÃO: Símbolo puro e translúcido --- */
+        /* BOTÃO PLAY/PAUSE SOBRE A CAPA */
         .controles button { 
-            position: absolute; 
-            top: 50%; 
-            left: 50%; 
-            transform: translate(-50%, -50%); /* Centralização perfeita */
-            background-color: transparent; /* Remove o fundo */
-            border: none; 
-            width: 100%; /* Ocupa toda a área da capa */
-            height: 100%; 
-            cursor: pointer; 
-            font-size: 24px; /* Aumentado conforme solicitado */
-            transition: 0.3s; 
-            display: flex; 
-            align-items: center; 
-            justify-content: center; 
-            color: rgba(0, 0, 0, 0.5); /* Preto com 50% de opacidade */
-            padding: 0;
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); 
+            background-color: transparent; border: none; width: 100%; height: 100%; 
+            cursor: pointer; font-size: 24px; display: flex; align-items: center; 
+            justify-content: center; color: rgba(0, 0, 0, 0.5); transition: 0.3s; 
         }
-        
-        .controles button:hover { 
-            color: rgba(0, 0, 0, 0.8); /* Fica mais nítido ao passar o mouse */
-        }
+        .controles button:hover { color: rgba(0, 0, 0, 0.8); }
 
-        .texto-player { overflow: hidden; white-space: nowrap; }
+        /* TEXTO DO PLAYER COM EFEITO DE ROLAGEM (MARQUEE) */
+        .texto-player { overflow: hidden; white-space: nowrap; flex: 1; position: relative; }
         .texto-player p#current-station-display { margin:0; font-size: 9px; color: #00f2ff; text-transform: uppercase; }
-        .texto-player h2#music-title-display { margin:2px 0 0 0; font-size: 13px; overflow: hidden; text-overflow: ellipsis; }
-        .texto-player p#artist-name-display { margin:0; font-size: 11px; color: #bbb; overflow: hidden; text-overflow: ellipsis; }
-
-        /* GRADE DE 5 COLUNAS - Mantido */
-        .grid-estacoes { display: grid; grid-template-columns: repeat(5, 1fr); gap: 25px; width: 100%; }
         
-        .card-estacao { background-color: #1a1a1a; padding: 20px; border-radius: 15px; text-align: center; cursor: pointer; transition: 0.3s; border: 1px solid transparent; box-sizing: border-box; }
+        /* O segredo da animação está aqui */
+        .scroll-container { display: inline-block; white-space: nowrap; }
+        
+        .texto-player h2#music-title-display { 
+            margin: 2px 0 0 0; 
+            font-size: 13px; 
+            display: inline-block;
+            animation: scroll-text 10s linear infinite; /* Ajuste o tempo (10s) para mais lento ou rápido */
+            padding-right: 50px; /* Espaço para o texto não "colar" no início ao voltar */
+        }
+
+        @keyframes scroll-text {
+            0% { transform: translateX(0); }
+            10% { transform: translateX(0); } /* Pausa no início */
+            45% { transform: translateX(-50%); } /* Vai até o meio (ajustável conforme o texto) */
+            55% { transform: translateX(-50%); } /* Pausa no final */
+            90% { transform: translateX(0); } /* Volta */
+            100% { transform: translateX(0); }
+        }
+
+        .texto-player p#artist-name-display { margin:0; font-size: 11px; color: #bbb; }
+
+        /* GRADE DE ESTAÇÕES */
+        .grid-estacoes { display: grid; grid-template-columns: repeat(5, 1fr); gap: 25px; width: 100%; }
+        .card-estacao { background-color: #1a1a1a; padding: 20px; border-radius: 15px; text-align: center; cursor: pointer; transition: 0.3s; border: 1px solid transparent; }
         .card-estacao:hover { background-color: #252525; border-color: #00f2ff; transform: translateY(-5px); }
         .card-estacao img { width: 100%; border-radius: 10px; margin-bottom: 15px; display: block; }
         .card-estacao p { margin: 0; font-weight: 600; font-size: 14px; }
 
-        /* OCULTAR DADOS DO CENTOVA - Mantido */
-        #centova-data { display: none !important; visibility: hidden !important; position: absolute !important; }
+        #centova-data { display: none !important; }
     </style>
 </head>
 <body>
@@ -118,7 +105,9 @@
                 
                 <div class="texto-player">
                     <p id="current-station-display">Selecione uma rádio</p>
-                    <h2 id="music-title-display">Aguardando...</h2>
+                    <div class="scroll-container">
+                        <h2 id="music-title-display">Aguardando rádio...</h2>
+                    </div>
                     <p id="artist-name-display">-</p>
                     <span class="cc_streaminfo" data-type="song" data-username="paulo" id="centova-data"></span>
                 </div>
@@ -140,7 +129,6 @@
     <audio id="main-audio" src=""></audio>
 
     <script>
-        // SCRIPT - Mantido original para funcionamento do player
         const audio = document.getElementById('main-audio');
         const playBtn = document.getElementById('play-btn');
         const stationDisplay = document.getElementById('current-station-display');
