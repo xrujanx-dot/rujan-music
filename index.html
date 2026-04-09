@@ -18,9 +18,9 @@
         /* ÁREA PRINCIPAL - Mantido */
         main { flex: 1; padding: 38px; overflow-y: auto; display: flex; flex-direction: column; align-items: flex-start; }
         
-        /* --- PLAYER: POSICIONAMENTO E ESTILO ATUALIZADOS --- */
+        /* PLAYER: POSICIONAMENTO E ESTILO ATUALIZADOS */
         .player-container { 
-            width: calc(20% - 20px); /* Alinhamento exato com o bloco de baixo */
+            width: calc(20% - 20px); /* Alinhamento com bloco de baixo */
             min-width: 200px; 
             background: linear-gradient(145deg, #1e1e1e, #111); 
             padding: 15px; 
@@ -36,9 +36,9 @@
 
         .info-musica { display: flex; align-items: center; gap: 12px; overflow: hidden; flex: 1; }
         
-        /* Caixa para segurar a capa e o botão por cima */
+        /* Caixa para segurar a capa e o símbolo por cima */
         .capa-wrapper { 
-            position: relative; /* Permite posicionamento absoluto do botão */
+            position: relative; /* Para o símbolo absoluto */
             width: 50px; 
             height: 50px; 
             flex-shrink: 0; 
@@ -54,30 +54,28 @@
             background-position: center; 
         }
         
-        /* Botão posicionado sobre a capa, translúcido */
+        /* --- CORREÇÃO: Símbolo puro e translúcido --- */
         .controles button { 
             position: absolute; 
             top: 50%; 
             left: 50%; 
-            transform: translate(-50%, -50%); /* Centraliza perfeitamente */
-            background-color: rgba(0, 242, 255, 0.6); /* Cyan com 60% de opacidade */
+            transform: translate(-50%, -50%); /* Centralização perfeita */
+            background-color: transparent; /* Remove o fundo */
             border: none; 
-            width: 32px; 
-            height: 32px; 
-            border-radius: 50%; 
+            width: 100%; /* Ocupa toda a área da capa */
+            height: 100%; 
             cursor: pointer; 
-            font-size: 13px; 
+            font-size: 24px; /* Aumentado conforme solicitado */
             transition: 0.3s; 
             display: flex; 
             align-items: center; 
             justify-content: center; 
-            color: #000; /* Texto preto para contraste no cyan */
-            backdrop-filter: blur(2px); /* Efeito de desfoque sutil no fundo */
+            color: rgba(0, 0, 0, 0.5); /* Preto com 50% de opacidade */
+            padding: 0;
         }
         
         .controles button:hover { 
-            background-color: rgba(0, 242, 255, 0.9); /* Cyan mais sólido no hover */
-            transform: translate(-50%, -50%) scale(1.1); 
+            color: rgba(0, 0, 0, 0.8); /* Fica mais nítido ao passar o mouse */
         }
 
         .texto-player { overflow: hidden; white-space: nowrap; }
