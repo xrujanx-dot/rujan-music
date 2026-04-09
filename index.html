@@ -23,6 +23,16 @@
         .card-estacao:hover { background-color: #252525; border-color: #00f2ff; transform: translateY(-5px); }
         .card-estacao img { width: 100%; border-radius: 10px; margin-bottom: 15px; }
         .card-estacao p { margin: 0; font-weight: 600; font-size: 14px; }
+
+        /* CORREÇÃO: Esconde totalmente a span que o Centova preenche */
+        #centova-data {
+            display: none !important;
+            visibility: hidden !important;
+            opacity: 0 !important;
+            height: 0 !important;
+            width: 0 !important;
+            position: absolute !important;
+        }
     </style>
 </head>
 <body>
@@ -47,7 +57,7 @@
                     
                     <p id="artist-name-display" style="margin:5px 0 0 0; font-size: 14px; color: #bbb; font-weight: 300;">Sintonizando...</p>
                     
-                    <span class="cc_streaminfo" data-type="song" data-username="paulo" id="centova-data" style="display:none !important;"></span>
+                    <span class="cc_streaminfo" data-type="song" data-username="paulo" id="centova-data"></span>
                 </div>
             </div>
             <div class="controles">
@@ -87,12 +97,11 @@
             
             if (rawData && rawData.includes(" - ")) {
                 const partes = rawData.split(" - ");
-                // Limpa as repetições: partes[0] vira Artista, partes[1] vira Música
                 artistDisplay.innerText = partes[0].trim(); 
                 musicDisplay.innerText = partes[1].trim();  
-            } else if (rawData && rawData !== "Loading ..." && rawData !== "Carregando..." && rawData !== "Sintonizando informações...") {
+            } else if (rawData && rawData !== "Loading ..." && rawData !== "Carregando...") {
                 musicDisplay.innerText = rawData;
-                artistDisplay.innerText = "Transmissão ao vivo"; 
+                artistDisplay.innerText = ""; 
             }
         });
 
