@@ -82,17 +82,17 @@
             playBtn.innerText = '⏸';
         }
 
-        // Observador para separar os dados e atualizar a interface sem duplicar
         const observer = new MutationObserver(() => {
             const rawData = centovaData.innerText; 
             
             if (rawData && rawData.includes(" - ")) {
                 const partes = rawData.split(" - ");
+                // Define apenas os campos específicos e evita que o rawData apareça em outro lugar
                 artistDisplay.innerText = partes[0].trim(); 
                 musicDisplay.innerText = partes[1].trim();  
             } else if (rawData && rawData !== "Loading ..." && rawData !== "Carregando...") {
                 musicDisplay.innerText = rawData;
-                artistDisplay.innerText = ""; // Limpa o artista se não houver separação
+                artistDisplay.innerText = ""; 
             }
         });
 
