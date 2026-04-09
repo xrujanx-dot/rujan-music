@@ -6,21 +6,21 @@
     <title>VibePlay Nacional | Sua Rádio</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
-        /* CONFIGURAÇÕES GERAIS */
+        /* CONFIGURAÇÕES GERAIS - Mantido */
         body { margin: 0; padding: 0; background-color: #0f0f0f; color: white; font-family: 'Poppins', sans-serif; display: flex; height: 100vh; overflow: hidden; }
         
-        /* MENU LATERAL */
+        /* MENU LATERAL - Mantido */
         nav { width: 250px; background-color: #1a1a1a; padding: 40px 20px; display: flex; flex-direction: column; border-right: 1px solid #333; }
         nav h1 { font-size: 22px; color: #00f2ff; margin-bottom: 50px; text-transform: uppercase; letter-spacing: 2px; }
         nav a { color: #888; text-decoration: none; margin: 15px 0; font-weight: 300; transition: 0.3s; }
         nav a:hover, nav a.active { color: white; padding-left: 10px; }
         
-        /* ÁREA PRINCIPAL */
+        /* ÁREA PRINCIPAL - Mantido */
         main { flex: 1; padding: 38px; overflow-y: auto; display: flex; flex-direction: column; align-items: flex-start; }
         
-        /* PLAYER ESTILO RETÂNGULO ALINHADO COM O BLOCO ABAIXO */
+        /* --- PLAYER: POSICIONAMENTO E ESTILO ATUALIZADOS --- */
         .player-container { 
-            width: calc(20% - 20px); /* Largura exata de 1 coluna da grade */
+            width: calc(20% - 20px); /* Alinhamento exato com o bloco de baixo */
             min-width: 200px; 
             background: linear-gradient(145deg, #1e1e1e, #111); 
             padding: 15px; 
@@ -34,18 +34,58 @@
             box-sizing: border-box; 
         }
 
-        .info-musica { display: flex; align-items: center; gap: 12px; overflow: hidden; }
-        .capa-album { width: 50px; height: 50px; flex-shrink: 0; background-color: #333; border-radius: 6px; background-image: url('https://via.placeholder.com/50'); background-size: cover; background-position: center; }
+        .info-musica { display: flex; align-items: center; gap: 12px; overflow: hidden; flex: 1; }
         
+        /* Caixa para segurar a capa e o botão por cima */
+        .capa-wrapper { 
+            position: relative; /* Permite posicionamento absoluto do botão */
+            width: 50px; 
+            height: 50px; 
+            flex-shrink: 0; 
+        }
+
+        .capa-album { 
+            width: 100%; 
+            height: 100%; 
+            border-radius: 6px; 
+            background-color: #333; 
+            background-image: url('https://via.placeholder.com/50'); 
+            background-size: cover; 
+            background-position: center; 
+        }
+        
+        /* Botão posicionado sobre a capa, translúcido */
+        .controles button { 
+            position: absolute; 
+            top: 50%; 
+            left: 50%; 
+            transform: translate(-50%, -50%); /* Centraliza perfeitamente */
+            background-color: rgba(0, 242, 255, 0.6); /* Cyan com 60% de opacidade */
+            border: none; 
+            width: 32px; 
+            height: 32px; 
+            border-radius: 50%; 
+            cursor: pointer; 
+            font-size: 13px; 
+            transition: 0.3s; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            color: #000; /* Texto preto para contraste no cyan */
+            backdrop-filter: blur(2px); /* Efeito de desfoque sutil no fundo */
+        }
+        
+        .controles button:hover { 
+            background-color: rgba(0, 242, 255, 0.9); /* Cyan mais sólido no hover */
+            transform: translate(-50%, -50%) scale(1.1); 
+        }
+
         .texto-player { overflow: hidden; white-space: nowrap; }
         .texto-player p#current-station-display { margin:0; font-size: 9px; color: #00f2ff; text-transform: uppercase; }
         .texto-player h2#music-title-display { margin:2px 0 0 0; font-size: 13px; overflow: hidden; text-overflow: ellipsis; }
         .texto-player p#artist-name-display { margin:0; font-size: 11px; color: #bbb; overflow: hidden; text-overflow: ellipsis; }
 
-        .controles button { background: #00f2ff; border: none; width: 35px; height: 35px; border-radius: 50%; cursor: pointer; font-size: 14px; transition: 0.3s; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-left: 10px; }
-        .controles button:hover { transform: scale(1.1); box-shadow: 0 0 15px rgba(0, 242, 255, 0.4); }
-
-        /* GRADE DE 5 COLUNAS */
+        /* GRADE DE 5 COLUNAS - Mantido */
         .grid-estacoes { display: grid; grid-template-columns: repeat(5, 1fr); gap: 25px; width: 100%; }
         
         .card-estacao { background-color: #1a1a1a; padding: 20px; border-radius: 15px; text-align: center; cursor: pointer; transition: 0.3s; border: 1px solid transparent; box-sizing: border-box; }
@@ -53,7 +93,7 @@
         .card-estacao img { width: 100%; border-radius: 10px; margin-bottom: 15px; display: block; }
         .card-estacao p { margin: 0; font-weight: 600; font-size: 14px; }
 
-        /* OCULTAR DADOS DO CENTOVA */
+        /* OCULTAR DADOS DO CENTOVA - Mantido */
         #centova-data { display: none !important; visibility: hidden !important; position: absolute !important; }
     </style>
 </head>
@@ -71,16 +111,19 @@
     <main>
         <div class="player-container">
             <div class="info-musica">
-                <div class="capa-album" id="current-cover"></div>
+                <div class="capa-wrapper">
+                    <div class="capa-album" id="current-cover"></div>
+                    <div class="controles">
+                        <button id="play-btn">▶</button>
+                    </div>
+                </div>
+                
                 <div class="texto-player">
                     <p id="current-station-display">Selecione uma rádio</p>
                     <h2 id="music-title-display">Aguardando...</h2>
                     <p id="artist-name-display">-</p>
                     <span class="cc_streaminfo" data-type="song" data-username="paulo" id="centova-data"></span>
                 </div>
-            </div>
-            <div class="controles">
-                <button id="play-btn">▶</button>
             </div>
         </div>
 
@@ -99,6 +142,7 @@
     <audio id="main-audio" src=""></audio>
 
     <script>
+        // SCRIPT - Mantido original para funcionamento do player
         const audio = document.getElementById('main-audio');
         const playBtn = document.getElementById('play-btn');
         const stationDisplay = document.getElementById('current-station-display');
