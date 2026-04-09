@@ -37,37 +37,46 @@
         .capa-wrapper { position: relative; width: 50px; height: 50px; flex-shrink: 0; }
         .capa-album { width: 100%; height: 100%; border-radius: 6px; background-color: #333; background-size: cover; background-position: center; }
         
-        /* BOTÃO PLAY/PAUSE SOBRE A CAPA */
         .controles button { 
             position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); 
             background-color: transparent; border: none; width: 100%; height: 100%; 
             cursor: pointer; font-size: 24px; display: flex; align-items: center; 
             justify-content: center; color: rgba(0, 0, 0, 0.5); transition: 0.3s; 
         }
-        .controles button:hover { color: rgba(0, 0, 0, 0.8); }
 
-        /* TEXTO DO PLAYER COM EFEITO DE ROLAGEM (MARQUEE) */
-        .texto-player { overflow: hidden; white-space: nowrap; flex: 1; position: relative; }
+        /* --- LOGICA DO TEXTO INTELIGENTE --- */
+        .texto-player { 
+            overflow: hidden; 
+            flex: 1; 
+            display: flex;
+            flex-direction: column;
+            mask-image: linear-gradient(to right, black 90%, transparent 100%); /* Suaviza a borda direita se o texto for grande */
+        }
+
         .texto-player p#current-station-display { margin:0; font-size: 9px; color: #00f2ff; text-transform: uppercase; }
-        
-        /* O segredo da animação está aqui */
-        .scroll-container { display: inline-block; white-space: nowrap; }
-        
+
+        .scroll-wrapper {
+            width: 100%;
+            overflow: hidden;
+            white-space: nowrap;
+        }
+
         .texto-player h2#music-title-display { 
             margin: 2px 0 0 0; 
             font-size: 13px; 
             display: inline-block;
-            animation: scroll-text 10s linear infinite; /* Ajuste o tempo (10s) para mais lento ou rápido */
-            padding-right: 50px; /* Espaço para o texto não "colar" no início ao voltar */
+            white-space: nowrap;
+            padding-right: 10px; /* Margem de segurança de ~0.3cm da borda */
+        }
+
+        /* Classe que será adicionada via JS apenas se o texto for grande */
+        .animar-texto {
+            animation: scroll-text 8s linear infinite alternate;
         }
 
         @keyframes scroll-text {
-            0% { transform: translateX(0); }
-            10% { transform: translateX(0); } /* Pausa no início */
-            45% { transform: translateX(-50%); } /* Vai até o meio (ajustável conforme o texto) */
-            55% { transform: translateX(-50%); } /* Pausa no final */
-            90% { transform: translateX(0); } /* Volta */
-            100% { transform: translateX(0); }
+            0%, 20% { transform: translateX(0); }
+            80%, 100% { transform: translateX(calc(-100% + 120px)); } /* 120px é o espaço visível aproximado */
         }
 
         .texto-player p#artist-name-display { margin:0; font-size: 11px; color: #bbb; }
@@ -105,7 +114,7 @@
                 
                 <div class="texto-player">
                     <p id="current-station-display">Selecione uma rádio</p>
-                    <div class="scroll-container">
+                    <div class="scroll-wrapper" id="scroll-wrapper">
                         <h2 id="music-title-display">Aguardando rádio...</h2>
                     </div>
                     <p id="artist-name-display">-</p>
@@ -136,6 +145,16 @@
         const artistDisplay = document.getElementById('artist-name-display');
         const currentCover = document.getElementById('current-cover');
         const centovaData = document.getElementById('centova-data');
+        const scrollWrapper = document.getElementById('scroll-wrapper');
+
+        // Função para verificar se o texto transbordou e precisa de animação
+        function checkScroll() {
+            if (musicDisplay.scrollWidth > scrollWrapper.clientWidth) {
+                musicDisplay.classList.add('animar-texto');
+            } else {
+                musicDisplay.classList.remove('animar-texto');
+            }
+        }
 
         function playRadio(nome, url, imagem) {
             stationDisplay.innerText = nome.toUpperCase();
@@ -143,6 +162,7 @@
             audio.src = url;
             audio.play();
             playBtn.innerText = '⏸';
+            setTimeout(checkScroll, 500); // Checa após carregar o nome
         }
 
         const observer = new MutationObserver(() => {
@@ -155,6 +175,7 @@
                 musicDisplay.innerText = rawData;
                 artistDisplay.innerText = ""; 
             }
+            checkScroll(); // Verifica sempre que o texto mudar
         });
 
         observer.observe(centovaData, { childList: true, characterData: true, subtree: true });
@@ -169,6 +190,9 @@
                 playBtn.innerText = '▶';
             }
         });
+        
+        // Checagem inicial
+        window.onload = checkScroll;
     </script>
 
     <script language="javascript" type="text/javascript" src="https://cast5.asurahosting.com:2199/system/streaminfo.js"></script>
