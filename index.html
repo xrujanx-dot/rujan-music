@@ -6,25 +6,30 @@
     <title>VibePlay Nacional | Sua Rádio</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
-        /* CSS MANTIDO ORIGINAL */
+        /* CSS MANTIDO ORIGINAL COM AJUSTES DE GRADE */
         body { margin: 0; padding: 0; background-color: #0f0f0f; color: white; font-family: 'Poppins', sans-serif; display: flex; height: 100vh; overflow: hidden; }
         nav { width: 250px; background-color: #1a1a1a; padding: 40px 20px; display: flex; flex-direction: column; border-right: 1px solid #333; }
         nav h1 { font-size: 22px; color: #00f2ff; margin-bottom: 50px; text-transform: uppercase; letter-spacing: 2px; }
         nav a { color: #888; text-decoration: none; margin: 15px 0; font-weight: 300; transition: 0.3s; }
         nav a:hover, nav a.active { color: white; padding-left: 10px; }
-        main { flex: 1; padding: 40px; overflow-y: auto; display: flex; flex-direction: column; align-items: center; }
-        .player-container { width: 100%; max-width: 800px; background: linear-gradient(145deg, #1e1e1e, #111); padding: 30px; border-radius: 20px; display: flex; align-items: center; justify-content: space-between; margin-bottom: 50px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); border: 1px solid #333; }
+        
+        /* Ajuste de 1cm (aprox 38px) das bordas */
+        main { flex: 1; padding: 38px; overflow-y: auto; display: flex; flex-direction: column; align-items: center; }
+        
+        .player-container { width: 100%; max-width: 100%; background: linear-gradient(145deg, #1e1e1e, #111); padding: 30px; border-radius: 20px; display: flex; align-items: center; justify-content: space-between; margin-bottom: 50px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); border: 1px solid #333; box-sizing: border-box; }
         .info-musica { display: flex; align-items: center; gap: 20px; }
         .capa-album { width: 80px; height: 80px; background-color: #333; border-radius: 10px; background-image: url('https://via.placeholder.com/80'); background-size: cover; background-position: center; }
         .controles button { background: #00f2ff; border: none; width: 60px; height: 60px; border-radius: 50%; cursor: pointer; font-size: 20px; transition: 0.3s; display: flex; align-items: center; justify-content: center; padding: 0; line-height: 0; }
         .controles button:hover { transform: scale(1.1); box-shadow: 0 0 20px rgba(0, 242, 255, 0.4); }
-        .grid-estacoes { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 25px; width: 100%; max-width: 1000px; }
-        .card-estacao { background-color: #1a1a1a; padding: 15px; border-radius: 15px; text-align: center; cursor: pointer; transition: 0.3s; border: 1px solid transparent; }
-        .card-estacao:hover { background-color: #252525; border-color: #00f2ff; transform: translateY(-5px); }
-        .card-estacao img { width: 100%; border-radius: 10px; margin-bottom: 15px; }
-        .card-estacao p { margin: 0; font-weight: 600; font-size: 14px; }
 
-        /* CORREÇÃO: Esconde totalmente a span que o Centova preenche */
+        /* AJUSTE PARA 5 COLUNAS FIXAS E MAIORES */
+        .grid-estacoes { display: grid; grid-template-columns: repeat(5, 1fr); gap: 25px; width: 100%; }
+        
+        .card-estacao { background-color: #1a1a1a; padding: 20px; border-radius: 15px; text-align: center; cursor: pointer; transition: 0.3s; border: 1px solid transparent; }
+        .card-estacao:hover { background-color: #252525; border-color: #00f2ff; transform: translateY(-5px); }
+        .card-estacao img { width: 100%; border-radius: 10px; margin-bottom: 15px; display: block; }
+        .card-estacao p { margin: 0; font-weight: 600; font-size: 16px; }
+
         #centova-data {
             display: none !important;
             visibility: hidden !important;
@@ -52,11 +57,8 @@
                 <div class="capa-album" id="current-cover"></div>
                 <div>
                     <p id="current-station-display" style="margin:0; font-size: 12px; color: #00f2ff;">SELECIONE UMA RÁDIO</p>
-                    
                     <h2 id="music-title-display" style="margin:5px 0 0 0; font-size: 20px;">Aguardando rádio...</h2>
-                    
                     <p id="artist-name-display" style="margin:5px 0 0 0; font-size: 14px; color: #bbb; font-weight: 300;">Sintonizando...</p>
-                    
                     <span class="cc_streaminfo" data-type="song" data-username="paulo" id="centova-data"></span>
                 </div>
             </div>
@@ -70,6 +72,10 @@
                 <img src="img/gospel.png" alt="Gospel">
                 <p>Gospel Atuais</p>
             </div>
+            <div class="card-estacao"></div>
+            <div class="card-estacao"></div>
+            <div class="card-estacao"></div>
+            <div class="card-estacao"></div>
         </div>
     </main>
 
