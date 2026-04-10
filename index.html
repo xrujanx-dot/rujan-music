@@ -15,7 +15,7 @@
         
         /* PLAYER LATERAL (ESTILO HUNTER) */
         #side-player { 
-            width: 380px; /* Aumentado para melhor proporção */
+            width: 380px; 
             background: linear-gradient(180deg, #1c1c1c 0%, #111111 100%); 
             display: flex; 
             flex-direction: column; 
@@ -59,12 +59,12 @@
         .volume-container { position: relative; display: flex; align-items: center; margin-top: 40px; width: 80%; justify-content: center; gap: 15px; }
         .volume-slider { width: 100px; cursor: pointer; accent-color: var(--accent-color); }
 
-        /* ÁREA DAS ESTAÇÕES (GRID MAIOR) */
+        /* ÁREA DAS ESTAÇÕES */
         main { flex: 1; padding: 50px; overflow-y: auto; background-color: #0d0d0d; }
         
         .grid-estacoes { 
             display: grid; 
-            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); /* Quadrados bem maiores */
+            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); 
             gap: 35px; 
             width: 100%; 
         }
@@ -94,7 +94,8 @@
             80%, 100% { transform: translateX(calc(-100% + 280px)); } 
         }
 
-        #centova-data { display: none; }
+        /* Esconde os dados brutos do Centova */
+        .centova-hidden { display: none !important; }
     </style>
 </head>
 <body>
@@ -133,14 +134,12 @@
                 <img src="img/gospel.png" alt="Gospel">
                 <p>O Canal Gospel</p>
             </div>
-
-            <div class="card-estacao"></div>
-            <div class="card-estacao"></div>
-            <div class="card-estacao"></div>
-        </div>
+            </div>
     </main>
 
-    <span class="cc_streaminfo" data-type="song" data-username="paulo" id="centova-data"></span>
+    <span class="cc_streaminfo centova-hidden" data-type="song" data-username="paulo" id="centova-data"></span>
+    <span class="cc_streaminfo centova-hidden" data-type="trackimageurl" data-username="paulo" id="centova-cover"></span>
+    
     <audio id="main-audio" src=""></audio>
 
     <script>
@@ -151,6 +150,7 @@
         const stationDisplay = document.getElementById('current-station-display');
         const currentCover = document.getElementById('current-cover');
         const centovaData = document.getElementById('centova-data');
+        const centovaCover = document.getElementById('centova-cover');
         const scrollWrapper = document.getElementById('scroll-wrapper');
         const volumeControl = document.getElementById('volume-control');
 
@@ -168,6 +168,7 @@
 
         function playRadio(nome, url, imagem) {
             stationDisplay.innerText = nome;
+            // Define a imagem da estação como padrão até a música carregar
             currentCover.style.backgroundImage = `url('${imagem}')`;
             audio.src = url;
             audio.play();
@@ -176,19 +177,29 @@
         }
 
         const observer = new MutationObserver(() => {
+            // Atualiza Texto
             const rawData = centovaData.innerText.trim(); 
             if (rawData && rawData.includes(" - ")) {
                 const partes = rawData.split(" - ");
                 artistDisplay.innerText = limparTexto(partes[0]); 
                 musicDisplay.innerText = limparTexto(partes[1]);  
-            } else if (rawData && rawData !== "Loading ...") {
+            } else if (rawData && rawData !== "Loading ..." && rawData !== "") {
                 musicDisplay.innerText = limparTexto(rawData);
                 artistDisplay.innerText = ""; 
             }
+
+            // Atualiza Capa da Música
+            const rawCover = centovaCover.innerText.trim();
+            if (rawCover && rawCover !== "" && !rawCover.includes("Loading")) {
+                currentCover.style.backgroundImage = `url('${rawCover}')`;
+            }
+
             checkScroll();
         });
 
+        // Observa mudanças tanto no texto quanto na URL da capa
         observer.observe(centovaData, { childList: true, characterData: true, subtree: true });
+        observer.observe(centovaCover, { childList: true, characterData: true, subtree: true });
 
         playBtn.addEventListener('click', () => {
             if (!audio.src) return;
